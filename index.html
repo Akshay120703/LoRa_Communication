@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>LoRa Mesh Explorer – Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">
+      <span class="brand-title">LoRa Mesh Explorer</span>
+      <span class="brand-subtitle">Conceptual Long-Range Mesh Communication Simulator</span>
+    </div>
+    <nav class="main-nav">
+      <a href="index.html" class="active">Mesh Architecture</a>
+      <a href="dashboard.html">IoT Dashboard</a>
+      <a href="simulator.html">Network Simulator</a>
+    </nav>
+  </header>
+
+  <main class="page page-home">
+    <section class="page-intro">
+      <h1>LoRa-Inspired Mesh Network</h1>
+      <p>
+        This page shows a <strong>conceptual</strong> LoRa-style long‑range, low‑power mesh network.
+        Everything you see is simulated with simple, transparent JavaScript logic in your browser.
+      </p>
+      <div class="info-banner">
+        <strong>Note:</strong> This is not RF‑accurate. It visualizes ideas like
+        range, noise, packet loss and multi‑hop relaying so they are easy to understand.
+      </div>
+    </section>
+
+    <section class="layout-two-column">
+      <div class="column column-wide">
+        <div class="panel">
+          <div class="panel-header">
+            <h2>Network Canvas</h2>
+            <button class="info-icon" data-info-target="network-canvas-info">i</button>
+          </div>
+          <div class="panel-body">
+            <canvas id="networkCanvas" width="800" height="480" aria-label="LoRa mesh network canvas"></canvas>
+          </div>
+        </div>
+
+        <div id="network-canvas-info" class="info-panel">
+          <h3>What are you seeing?</h3>
+          <p>
+            Circles are nodes (sensors, relays, or a gateway). Lines show which nodes can talk.
+            Colors hint at link quality:
+          </p>
+          <ul>
+            <li><span class="legend-dot strong"></span> strong links (likely success)</li>
+            <li><span class="legend-dot weak"></span> weak links (may fail)</li>
+            <li><span class="legend-dot failed"></span> recent failed communication</li>
+          </ul>
+          <p>
+            Packets move slowly because LoRa trades <strong>speed</strong> for <strong>range &amp; reliability</strong>.
+          </p>
+        </div>
+      </div>
+
+      <div class="column column-narrow">
+        <div class="panel">
+          <div class="panel-header">
+            <h2>Network Controls</h2>
+          </div>
+          <div class="panel-body controls-grid">
+            <label>
+              Number of nodes
+              <input type="range" id="numNodesSlider" min="4" max="25" value="12" />
+              <span class="slider-value" data-for="numNodesSlider"></span>
+            </label>
+
+            <label>
+              Spreading Factor (SF)
+              <input type="range" id="sfSlider" min="7" max="12" value="9" />
+              <span class="slider-value" data-for="sfSlider"></span>
+              <span class="hint">
+                Higher SF ⇒ slower but longer range
+                <button class="info-icon inline" data-info-target="sf-info">?</button>
+              </span>
+            </label>
+
+            <label>
+              Symbol duration (ms)
+              <input type="range" id="symbolDurationSlider" min="20" max="300" value="80" />
+              <span class="slider-value" data-for="symbolDurationSlider"></span>
+            </label>
+
+            <label>
+              Noise level
+              <input type="range" id="noiseSlider" min="0" max="100" value="25" />
+              <span class="slider-value" data-for="noiseSlider"></span>
+            </label>
+
+            <label class="toggle-row">
+              <span>Topology</span>
+              <select id="topologySelect">
+                <option value="mesh">Mesh (multi-hop)</option>
+                <option value="star">Star (direct to gateway)</option>
+              </select>
+            </label>
+
+            <div class="buttons-row">
+              <button id="addNodeBtn">Add node</button>
+              <button id="removeNodeBtn">Remove node</button>
+              <button id="resetNetworkBtn">Reset network</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="sf-info" class="info-panel">
+          <h3>Spreading Factor (SF)</h3>
+          <p>
+            Think of SF like <strong>how slowly you speak</strong> over a noisy walkie‑talkie.
+            Higher SF means:
+          </p>
+          <ul>
+            <li>Each symbol takes longer (slower data)</li>
+            <li>But is easier to hear far away (better range)</li>
+            <li>Good for tiny, occasional sensor messages</li>
+          </ul>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <h2>Live Stats</h2>
+          </div>
+          <div class="panel-body live-stats">
+            <div><strong>Packets sent:</strong> <span id="statPacketsSent">0</span></div>
+            <div><strong>Packets delivered:</strong> <span id="statPacketsDelivered">0</span></div>
+            <div><strong>Avg hops per packet:</strong> <span id="statAvgHops">0</span></div>
+            <div><strong>Avg latency (ms):</strong> <span id="statAvgLatency">0</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <span>All logic runs entirely in your browser. View source to explore the model.</span>
+  </footer>
+
+  <!-- Ordered scripts (no ES module imports) so this works even on file:// -->
+  <script defer src="networkModel.js"></script>
+  <script defer src="meshLogic.js"></script>
+  <script defer src="simulationEngine.js"></script>
+  <script defer src="uiControls.js"></script>
+  <script defer src="visualization.js"></script>
+  <script defer src="main-home.js"></script>
+</body>
+</html>
+

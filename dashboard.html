@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>LoRa Mesh Explorer – IoT Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">
+      <span class="brand-title">LoRa Mesh Explorer</span>
+      <span class="brand-subtitle">Conceptual Long-Range Mesh Communication Simulator</span>
+    </div>
+    <nav class="main-nav">
+      <a href="index.html">Mesh Architecture</a>
+      <a href="dashboard.html" class="active">IoT Dashboard</a>
+      <a href="simulator.html">Network Simulator</a>
+    </nav>
+  </header>
+
+  <main class="page page-dashboard">
+    <section class="page-intro">
+      <h1>Simulated IoT Dashboard</h1>
+      <p>
+        Here you see how LoRa‑style sensors look from the application’s point of view.
+        Values are generated locally, and transmission delays are based on simple
+        rules for symbol duration, hops, and packet loss.
+      </p>
+      <div class="info-banner">
+        <strong>Idea:</strong> LoRa sends <em>small, slow</em> messages on purpose.
+        Even with a low data rate, you can build smart applications by designing
+        what you send carefully.
+      </div>
+    </section>
+
+    <section class="layout-two-column">
+      <div class="column column-narrow">
+        <div class="panel">
+          <div class="panel-header">
+            <h2>Sensors</h2>
+          </div>
+          <div class="panel-body">
+            <ul id="sensorList" class="sensor-list"></ul>
+            <button id="addSensorBtn">Add Sensor</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <h2>Transmission Settings</h2>
+          </div>
+          <div class="panel-body controls-grid">
+            <label>
+              Symbol duration (ms)
+              <input type="range" id="dashSymbolDurationSlider" min="20" max="300" value="80" />
+              <span class="slider-value" data-for="dashSymbolDurationSlider"></span>
+            </label>
+
+            <label>
+              Noise level
+              <input type="range" id="dashNoiseSlider" min="0" max="100" value="25" />
+              <span class="slider-value" data-for="dashNoiseSlider"></span>
+            </label>
+
+            <label>
+              Mesh depth (max hops)
+              <input type="range" id="dashMeshDepthSlider" min="1" max="5" value="3" />
+              <span class="slider-value" data-for="dashMeshDepthSlider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <h2>Key Idea</h2>
+          </div>
+          <div class="panel-body">
+            <p>
+              <strong>Low data rate ≠ low intelligence.</strong>
+              Sensors send tiny packets, but the application can still combine them
+              over time to make smart decisions.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="column column-wide">
+        <div class="panel">
+          <div class="panel-header">
+            <h2>Sensor Values Over Time</h2>
+          </div>
+          <div class="panel-body">
+            <canvas id="sensorChart"></canvas>
+          </div>
+        </div>
+
+        <div class="panel charts-row">
+          <div class="chart-panel">
+            <div class="panel-header small">
+              <h3>Packet Loss Over Time</h3>
+            </div>
+            <div class="panel-body">
+              <canvas id="packetLossChart"></canvas>
+            </div>
+          </div>
+          <div class="chart-panel">
+            <div class="panel-header small">
+              <h3>Latency Distribution</h3>
+            </div>
+            <div class="panel-body">
+              <canvas id="latencyChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <span>All data is simulated locally to demonstrate LoRa-style behavior.</span>
+  </footer>
+
+  <!-- Ordered scripts (no ES module imports) so this works even on file:// -->
+  <script defer src="uiControls.js"></script>
+  <script defer src="chartUtils.js"></script>
+  <script defer src="main-dashboard.js"></script>
+</body>
+</html>
+

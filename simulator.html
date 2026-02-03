@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>LoRa Mesh Explorer – Network Simulator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">
+      <span class="brand-title">LoRa Mesh Explorer</span>
+      <span class="brand-subtitle">Conceptual Long-Range Mesh Communication Simulator</span>
+    </div>
+    <nav class="main-nav">
+      <a href="index.html">Mesh Architecture</a>
+      <a href="dashboard.html">IoT Dashboard</a>
+      <a href="simulator.html" class="active">Network Simulator</a>
+    </nav>
+  </header>
+
+  <main class="page page-simulator">
+    <section class="page-intro">
+      <h1>LoRa-Style Network Tradeoffs</h1>
+      <p>
+        Use the sliders to explore how spreading factor, bandwidth, number of nodes and noise
+        affect packet success, latency, throughput, and energy cost.
+      </p>
+      <div class="info-banner">
+        <strong>No real RF formulas here.</strong>
+        We use simple, kid‑friendly rules that still show the real‑world tradeoffs.
+      </div>
+    </section>
+
+    <section class="layout-two-column">
+      <div class="column column-narrow">
+        <div class="panel">
+          <div class="panel-header">
+            <h2>Inputs</h2>
+          </div>
+          <div class="panel-body controls-grid">
+            <label>
+              Spreading Factor (SF)
+              <input type="range" id="simSfSlider" min="7" max="12" value="9" />
+              <span class="slider-value" data-for="simSfSlider"></span>
+            </label>
+
+            <label>
+              Bandwidth (relative)
+              <input type="range" id="simBwSlider" min="1" max="5" value="3" />
+              <span class="slider-value" data-for="simBwSlider"></span>
+            </label>
+
+            <label>
+              Transmission interval (s)
+              <input type="range" id="simIntervalSlider" min="1" max="60" value="10" />
+              <span class="slider-value" data-for="simIntervalSlider"></span>
+            </label>
+
+            <label>
+              Noise level
+              <input type="range" id="simNoiseSlider" min="0" max="100" value="30" />
+              <span class="slider-value" data-for="simNoiseSlider"></span>
+            </label>
+
+            <label>
+              Number of nodes
+              <input type="range" id="simNodesSlider" min="5" max="200" value="50" />
+              <span class="slider-value" data-for="simNodesSlider"></span>
+            </label>
+
+            <label>
+              Mesh depth (max hops)
+              <input type="range" id="simMeshDepthSlider" min="1" max="6" value="3" />
+              <span class="slider-value" data-for="simMeshDepthSlider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="panel explanation-panel">
+          <div class="panel-header">
+            <h2>Why did this change?</h2>
+          </div>
+          <div class="panel-body">
+            <p id="simExplanation">
+              Move a slider to see a friendly explanation of how it affects the network.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="column column-wide">
+        <div class="panel">
+          <div class="panel-header">
+            <h2>Estimated Outcomes</h2>
+          </div>
+          <div class="panel-body outcomes-grid">
+            <div class="outcome-card" data-tooltip="Higher is better – more packets make it to the gateway.">
+              <h3>Packet Success Rate</h3>
+              <p class="outcome-value" id="outSuccessRate">0%</p>
+            </div>
+            <div class="outcome-card" data-tooltip="Time from sending to delivery, including hops and slow symbols.">
+              <h3>Average Latency</h3>
+              <p class="outcome-value" id="outLatency">0 ms</p>
+            </div>
+            <div class="outcome-card" data-tooltip="How many useful bits are delivered per second, roughly.">
+              <h3>Network Throughput</h3>
+              <p class="outcome-value" id="outThroughput">0 kbps</p>
+            </div>
+            <div class="outcome-card" data-tooltip="Relative energy per delivered packet, combining airtime and retries.">
+              <h3>Energy Cost</h3>
+              <p class="outcome-value" id="outEnergy">x 1.0</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <h2>Visual Tradeoff View</h2>
+          </div>
+          <div class="panel-body">
+            <canvas id="simTradeoffChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <span>Adjust sliders to see conceptual LoRa-style tradeoffs—no real RF math required.</span>
+  </footer>
+
+  <!-- Ordered scripts (no ES module imports) so this works even on file:// -->
+  <script defer src="uiControls.js"></script>
+  <script defer src="chartUtils.js"></script>
+  <script defer src="main-simulator.js"></script>
+</body>
+</html>
+

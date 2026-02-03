@@ -1,0 +1,369 @@
+/* Global layout & typography */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #050816;
+  color: #e5e7eb;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.site-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.35);
+  background: radial-gradient(circle at top left, #1e293b 0, #020617 55%);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.brand-title {
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.brand-subtitle {
+  display: block;
+  font-size: 0.8rem;
+  color: #9ca3af;
+}
+
+.main-nav a {
+  color: #9ca3af;
+  text-decoration: none;
+  margin-left: 1rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 999px;
+  transition: background 0.18s, color 0.18s;
+  font-size: 0.9rem;
+}
+
+.main-nav a:hover {
+  background: rgba(148, 163, 184, 0.15);
+  color: #e5e7eb;
+}
+
+.main-nav a.active {
+  background: linear-gradient(90deg, #38bdf8, #a855f7);
+  color: white;
+}
+
+.page {
+  flex: 1;
+  padding: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.page-intro h1 {
+  margin: 0 0 0.5rem;
+}
+
+.page-intro p {
+  margin: 0.25rem 0 0.75rem;
+  color: #d1d5db;
+}
+
+.info-banner {
+  margin: 0.75rem 0 1.25rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  font-size: 0.9rem;
+}
+
+.layout-two-column {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1.25fr);
+  gap: 1.25rem;
+}
+
+.column-wide {
+  grid-column: 1 / 2;
+}
+
+.column-narrow {
+  grid-column: 2 / 3;
+}
+
+@media (max-width: 900px) {
+  .layout-two-column {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .column-wide,
+  .column-narrow {
+    grid-column: auto;
+  }
+}
+
+.panel {
+  background: radial-gradient(circle at top left, #111827 0, #020617 75%);
+  border-radius: 1rem;
+  border: 1px solid rgba(31, 41, 55, 0.9);
+  box-shadow: 0 18px 35px rgba(15, 23, 42, 0.8);
+  overflow: hidden;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid rgba(31, 41, 55, 0.9);
+}
+
+.panel-header.small {
+  padding: 0.5rem 0.75rem;
+}
+
+.panel-body {
+  padding: 0.75rem 1rem 1rem;
+}
+
+.info-icon {
+  border: none;
+  border-radius: 999px;
+  width: 1.5rem;
+  height: 1.5rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+  background: rgba(30, 64, 175, 0.8);
+  color: white;
+}
+
+.info-icon.inline {
+  width: 1.1rem;
+  height: 1.1rem;
+  font-size: 0.7rem;
+  margin-left: 0.25rem;
+}
+
+.info-panel {
+  margin-top: 0.6rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: 0.75rem;
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px dashed rgba(148, 163, 184, 0.7);
+  font-size: 0.85rem;
+  display: none;
+}
+
+.info-panel.visible {
+  display: block;
+}
+
+.legend-dot {
+  display: inline-block;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 999px;
+  margin-right: 0.35rem;
+}
+
+.legend-dot.strong {
+  background: #22c55e;
+}
+
+.legend-dot.weak {
+  background: #fbbf24;
+}
+
+.legend-dot.failed {
+  background: #f97373;
+}
+
+.controls-grid label {
+  display: block;
+  margin-bottom: 0.7rem;
+  font-size: 0.9rem;
+}
+
+.controls-grid input[type="range"] {
+  width: 100%;
+}
+
+.slider-value {
+  display: inline-block;
+  min-width: 2.8rem;
+  text-align: right;
+  font-size: 0.8rem;
+  color: #9ca3af;
+}
+
+.hint {
+  display: block;
+  font-size: 0.75rem;
+  color: #9ca3af;
+  margin-top: 0.15rem;
+}
+
+.toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.toggle-row select {
+  background: #020617;
+  color: #e5e7eb;
+  border-radius: 999px;
+  padding: 0.25rem 0.6rem;
+  border: 1px solid rgba(31, 41, 55, 0.9);
+}
+
+.buttons-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  flex-wrap: wrap;
+}
+
+button {
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.6);
+  background: rgba(15, 23, 42, 0.9);
+  color: #e5e7eb;
+  padding: 0.35rem 0.8rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, transform 0.05s;
+}
+
+button:hover {
+  background: rgba(30, 64, 175, 0.9);
+  border-color: #38bdf8;
+}
+
+button:active {
+  transform: translateY(1px);
+}
+
+canvas {
+  width: 100%;
+  max-width: 100%;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(31, 41, 55, 0.9);
+  background: radial-gradient(circle at center, #020617 0, #020617 50%, #020617 100%);
+}
+
+.live-stats div {
+  font-size: 0.9rem;
+  margin-bottom: 0.3rem;
+}
+
+.site-footer {
+  padding: 0.75rem 1.5rem;
+  font-size: 0.8rem;
+  color: #6b7280;
+  border-top: 1px solid rgba(17, 24, 39, 0.9);
+  background: #020617;
+}
+
+/* Dashboard specific */
+.sensor-list {
+  list-style: none;
+  margin: 0 0 0.75rem;
+  padding: 0;
+  max-height: 260px;
+  overflow: auto;
+}
+
+.sensor-list li {
+  padding: 0.4rem 0.45rem;
+  border-radius: 0.55rem;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(31, 41, 55, 0.9);
+  font-size: 0.85rem;
+  margin-bottom: 0.3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.sensor-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: #9ca3af;
+}
+
+.charts-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.chart-panel {
+  background: transparent;
+}
+
+@media (max-width: 900px) {
+  .charts-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Simulator */
+.outcomes-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+@media (max-width: 1100px) {
+  .outcomes-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .outcomes-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.outcome-card {
+  padding: 0.8rem 0.9rem;
+  border-radius: 0.75rem;
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid rgba(31, 41, 55, 0.9);
+  font-size: 0.85rem;
+}
+
+.outcome-card h3 {
+  margin: 0 0 0.3rem;
+  font-size: 0.9rem;
+}
+
+.outcome-value {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #38bdf8;
+}
+
+.explanation-panel {
+  font-size: 0.9rem;
+}
+
+/* Simple tooltips via title attribute can be used; here we just cursor-hint */
+.outcome-card[data-tooltip] {
+  cursor: help;
+}
+
