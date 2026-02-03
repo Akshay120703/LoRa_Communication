@@ -14,16 +14,6 @@
   const plotW = width - padding * 2;
   const plotH = height - padding * 2;
 
-  if (!dataSeries.length || dataSeries.every((v) => v == null)) return;
-
-  const xs = dataSeries.map((_, i) => i);
-  const ys = dataSeries.map((v) => (v == null ? 0 : v));
-
-  const minY = options.minY !== undefined ? options.minY : Math.min(...ys, 0);
-  const maxY = options.maxY !== undefined ? options.maxY : Math.max(...ys, 1);
-  const rangeY = maxY - minY || 1;
-
-  // Axes
   ctx.strokeStyle = "rgba(148,163,184,0.7)";
   ctx.lineWidth = 1;
   ctx.beginPath();
@@ -32,6 +22,15 @@
   ctx.moveTo(padding, padding);
   ctx.lineTo(padding, height - padding);
   ctx.stroke();
+
+  if (!dataSeries.length || dataSeries.every((v) => v == null)) return;
+
+  const xs = dataSeries.map((_, i) => i);
+  const ys = dataSeries.map((v) => (v == null ? 0 : v));
+
+  const minY = options.minY !== undefined ? options.minY : Math.min(...ys, 0);
+  const maxY = options.maxY !== undefined ? options.maxY : Math.max(...ys, 1);
+  const rangeY = maxY - minY || 1;
 
   // Line
   ctx.beginPath();
@@ -55,12 +54,6 @@
   const plotW = width - padding * 2;
   const plotH = height - padding * 2;
 
-  if (!values.length) return;
-
-  const maxY = options.maxY !== undefined ? options.maxY : Math.max(...values, 1);
-  const rangeY = maxY || 1;
-
-  // Axis
   ctx.strokeStyle = "rgba(148,163,184,0.7)";
   ctx.lineWidth = 1;
   ctx.beginPath();
@@ -68,6 +61,11 @@
   ctx.lineTo(padding, height - padding);
   ctx.lineTo(width - padding, height - padding);
   ctx.stroke();
+
+  if (!values.length) return;
+
+  const maxY = options.maxY !== undefined ? options.maxY : Math.max(...values, 1);
+  const rangeY = maxY || 1;
 
   const barCount = values.length;
   const gap = 8;

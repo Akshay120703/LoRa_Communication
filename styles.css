@@ -12,6 +12,8 @@ body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   background: #050816;
   color: #e5e7eb;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
@@ -30,6 +32,7 @@ body {
   position: sticky;
   top: 0;
   z-index: 10;
+  min-height: 60px;
 }
 
 .brand-title {
@@ -65,9 +68,10 @@ body {
 
 .page {
   flex: 1;
-  padding: 1.5rem;
-  max-width: 1200px;
+  padding: 1rem;
+  max-width: 1400px;
   margin: 0 auto;
+  min-height: calc(100vh - 120px);
 }
 
 .page-intro h1 {
@@ -90,8 +94,9 @@ body {
 
 .layout-two-column {
   display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(0, 1.25fr);
-  gap: 1.25rem;
+  grid-template-columns: minmax(0, 1.8fr) minmax(0, 1.2fr);
+  gap: 1rem;
+  align-items: start;
 }
 
 .column-wide {
@@ -102,13 +107,37 @@ body {
   grid-column: 2 / 3;
 }
 
+/* Page-specific overrides to keep Dashboard and Simulator with controls on the left */
+.page-dashboard .column-narrow,
+.page-simulator .column-narrow {
+  grid-column: 1 / 2;
+}
+.page-dashboard .column-wide,
+.page-simulator .column-wide {
+  grid-column: 2 / 3;
+}
+
 @media (max-width: 900px) {
   .layout-two-column {
     grid-template-columns: minmax(0, 1fr);
+    gap: 0.75rem;
   }
   .column-wide,
   .column-narrow {
     grid-column: auto;
+  }
+  
+  .page {
+    padding: 0.75rem;
+    max-width: 100%;
+  }
+  
+  .panel {
+    margin-bottom: 0.75rem;
+  }
+  
+  .panel-body {
+    padding: 0.75rem;
   }
 }
 
@@ -118,6 +147,8 @@ body {
   border: 1px solid rgba(31, 41, 55, 0.9);
   box-shadow: 0 18px 35px rgba(15, 23, 42, 0.8);
   overflow: hidden;
+  margin-bottom: 1rem;
+  height: fit-content;
 }
 
 .panel-header {
@@ -133,7 +164,7 @@ body {
 }
 
 .panel-body {
-  padding: 0.75rem 1rem 1rem;
+  padding: 1rem;
 }
 
 .info-icon {
@@ -196,6 +227,34 @@ body {
 
 .controls-grid input[type="range"] {
   width: 100%;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  height: 6px;
+  background: rgba(31, 41, 55, 0.9);
+  border-radius: 3px;
+  outline: none;
+}
+
+.controls-grid input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  background: #38bdf8;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.controls-grid input[type="range"]::-moz-range-thumb {
+  -moz-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  background: #38bdf8;
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
 }
 
 .slider-value {
@@ -243,6 +302,9 @@ button {
   font-size: 0.85rem;
   cursor: pointer;
   transition: background 0.15s, border-color 0.15s, transform 0.05s;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 }
 
 button:hover {
@@ -257,9 +319,14 @@ button:active {
 canvas {
   width: 100%;
   max-width: 100%;
+  height: auto;
   border-radius: 0.75rem;
   border: 1px solid rgba(31, 41, 55, 0.9);
   background: radial-gradient(circle at center, #020617 0, #020617 50%, #020617 100%);
+  display: block;
+  image-rendering: crisp-edges;
+  image-rendering: -webkit-crisp-edges;
+  image-rendering: pixelated;
 }
 
 .live-stats div {
@@ -273,6 +340,8 @@ canvas {
   color: #6b7280;
   border-top: 1px solid rgba(17, 24, 39, 0.9);
   background: #020617;
+  text-align: center;
+  margin-top: auto;
 }
 
 /* Dashboard specific */
@@ -306,16 +375,52 @@ canvas {
 .charts-row {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.75rem;
+  gap: 1rem;
+  margin-top: 1rem;
 }
 
 .chart-panel {
   background: transparent;
+  height: fit-content;
 }
 
 @media (max-width: 900px) {
   .charts-row {
     grid-template-columns: minmax(0, 1fr);
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+  }
+  
+  .chart-panel {
+    margin-bottom: 0.5rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .page {
+    padding: 0.5rem;
+  }
+  
+  .layout-two-column {
+    gap: 0.5rem;
+  }
+  
+  .panel {
+    margin-bottom: 0.5rem;
+    border-radius: 0.75rem;
+  }
+  
+  .panel-body {
+    padding: 0.5rem;
+  }
+  
+  .panel-header {
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .charts-row {
+    gap: 0.5rem;
+    margin-top: 0.5rem;
   }
 }
 
@@ -363,7 +468,34 @@ canvas {
 }
 
 /* Simple tooltips via title attribute can be used; here we just cursor-hint */
-.outcome-card[data-tooltip] {
-  cursor: help;
+@media (max-width: 768px) {
+  .site-header {
+    flex-direction: column;
+    padding: 0.5rem 1rem;
+    min-height: auto;
+    gap: 0.5rem;
+  }
+  
+  .brand {
+    text-align: center;
+  }
+  
+  .main-nav {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .main-nav a {
+    margin: 0;
+    padding: 0.3rem 0.6rem;
+    font-size: 0.85rem;
+  }
+  
+  .site-footer {
+    padding: 0.5rem 1rem;
+    text-align: center;
+  }
 }
 

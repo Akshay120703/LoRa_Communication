@@ -22,17 +22,31 @@
 
   // Give canvases real pixel sizes so drawings look crisp.
   // CSS controls how big they look on screen.
+  console.log('Initializing dashboard canvases...');
+  
   sensorChartCanvas.width = 900;
   sensorChartCanvas.height = 320;
   packetLossCanvas.width = 420;
   packetLossCanvas.height = 220;
   latencyCanvas.width = 420;
   latencyCanvas.height = 220;
+  
+  console.log('Canvas sizes set:', {
+    sensorChart: [sensorChartCanvas.width, sensorChartCanvas.height],
+    packetLoss: [packetLossCanvas.width, packetLossCanvas.height],
+    latency: [latencyCanvas.width, latencyCanvas.height]
+  });
 
   const sensorChartCtx = sensorChartCanvas.getContext("2d");
   const packetLossCtx = packetLossCanvas.getContext("2d");
   const latencyCtx = latencyCanvas.getContext("2d");
-  if (!sensorChartCtx || !packetLossCtx || !latencyCtx) return;
+  
+  if (!sensorChartCtx || !packetLossCtx || !latencyCtx) {
+    console.error('Failed to get canvas contexts!');
+    return;
+  }
+  
+  console.log('Canvas contexts initialized successfully');
 
   wireSliderValueText();
 
@@ -45,7 +59,7 @@
   const interval = 5 + Math.floor(Math.random() * 20); // seconds
   const payload = 8 + Math.floor(Math.random() * 24); // bytes
 
-  return {
+  const sensor = {
     id,
     name: `Sensor ${id}`,
     interval,
@@ -56,6 +70,27 @@
     lossHistory: [], // rolling packet loss ratio
     latencySamples: [] // recent latencies
   };
+
+  const seedCount = 12;
+  for (let i = 0; i < seedCount; i++) {
+    const t = i;
+    const base = 20 + 5 * Math.sin(t / 15 + id);
+    const lost = Math.random() < 0.15;
+    if (lost) {
+      sensor.values.push(null);
+    } else {
+      const v = base + (Math.random() - 0.5) * 2;
+      sensor.values.push(v);
+      const latencyMs = (1 + Math.floor(Math.random() * 3)) * (80 + Math.random() * 60);
+      sensor.latencySamples.push(latencyMs);
+    }
+    const total = sensor.values.length || 1;
+    const lostCount = sensor.values.filter((v) => v == null).length;
+    sensor.lossHistory.push(lostCount / total);
+  }
+  sensor.reliabilityScore = 1 - (sensor.values.filter((v) => v == null).length / sensor.values.length);
+
+  return sensor;
   }
 
   function addSensor() {
@@ -135,60 +170,81 @@
   }
 
   function renderCharts() {
-  // Main sensor values: show latest sensor's history
-  const active = sensors[0];
-  if (active) {
-    const values = active.values.map((v) => (v == null ? null : v));
-    const cleaned = values.map((v) => (v == null ? (values.length ? values[0] : 0) : v));
-    const min = Math.min(...cleaned);
-    const max = Math.max(...cleaned);
-    drawLineChart(sensorChartCtx, values, { minY: min - 2, maxY: max + 2 });
-  } else {
-    sensorChartCtx.clearRect(0, 0, sensorChartCanvas.width, sensorChartCanvas.height);
-  }
-
-  // Packet loss over time: average across sensors
-  const combinedLoss = [];
-  const maxLen = Math.max(...sensors.map((s) => s.lossHistory.length), 0);
-  for (let i = 0; i < maxLen; i++) {
-    let sum = 0;
-    let count = 0;
-    sensors.forEach((s) => {
-      if (i < s.lossHistory.length) {
-        sum += s.lossHistory[i];
-        count++;
+    console.log('Rendering charts with', sensors.length, 'sensors');
+    
+    // Main sensor values: show latest sensor's history
+    const active = sensors[0];
+    if (active) {
+      const values = active.values.map((v) => (v == null ? null : v));
+      const cleaned = values.map((v) => (v == null ? (values.length ? values[0] : 0) : v));
+      const min = Math.min(...cleaned);
+      const max = Math.max(...cleaned);
+      
+      try {
+        drawLineChart(sensorChartCtx, values, { minY: min - 2, maxY: max + 2 });
+        console.log('Sensor chart rendered successfully');
+      } catch (error) {
+        console.error('Error rendering sensor chart:', error);
       }
-    });
-    combinedLoss.push(count ? sum / count : 0);
-  }
-  drawLineChart(
-    packetLossCtx,
-    combinedLoss.map((r) => r * 100),
-    { minY: 0, maxY: 100, color: "#f97373" }
-  );
-
-  // Latency distribution: simple 4 buckets
-  const buckets = [0, 0, 0, 0];
-  let totalSamples = 0;
-  sensors.forEach((s) => {
-    s.latencySamples.forEach((ms) => {
-      totalSamples++;
-      if (ms < 200) buckets[0] += 1;
-      else if (ms < 400) buckets[1] += 1;
-      else if (ms < 800) buckets[2] += 1;
-      else buckets[3] += 1;
-    });
-  });
-  const bucketValues = buckets.map((b) => (totalSamples ? (b / totalSamples) * 100 : 0));
-  drawBarChart(
-    latencyCtx,
-    ["<200", "200-400", "400-800", ">800"],
-    bucketValues,
-    {
-      maxY: 100,
-      colors: ["#22c55e", "#eab308", "#fb923c", "#f97373"]
+    } else {
+      sensorChartCtx.clearRect(0, 0, sensorChartCanvas.width, sensorChartCanvas.height);
+      console.log('No active sensors, cleared sensor chart');
     }
-  );
+
+    // Packet loss over time: average across sensors
+    const combinedLoss = [];
+    const maxLen = Math.max(...sensors.map((s) => s.lossHistory.length), 0);
+    for (let i = 0; i < maxLen; i++) {
+      let sum = 0;
+      let count = 0;
+      sensors.forEach((s) => {
+        if (i < s.lossHistory.length) {
+          sum += s.lossHistory[i];
+          count++;
+        }
+      });
+      combinedLoss.push(count ? sum / count : 0);
+    }
+    
+    try {
+      drawLineChart(
+        packetLossCtx,
+        combinedLoss.map((r) => r * 100),
+        { minY: 0, maxY: 100, color: "#f97373" }
+      );
+      console.log('Packet loss chart rendered successfully');
+    } catch (error) {
+      console.error('Error rendering packet loss chart:', error);
+    }
+
+    // Latency distribution: simple 4 buckets
+    const buckets = [0, 0, 0, 0];
+    let totalSamples = 0;
+    sensors.forEach((s) => {
+      s.latencySamples.forEach((ms) => {
+        totalSamples++;
+        if (ms < 200) buckets[0] += 1;
+        else if (ms < 400) buckets[1] += 1;
+        else if (ms < 800) buckets[2] += 1;
+        else buckets[3] += 1;
+      });
+    });
+    const bucketValues = buckets.map((b) => (totalSamples ? (b / totalSamples) * 100 : 0));
+    
+    try {
+      drawBarChart(
+        latencyCtx,
+        ["<200", "200-400", "400-800", ">800"],
+        bucketValues,
+        {
+          maxY: 100,
+          colors: ["#22c55e", "#eab308", "#fb923c", "#f97373"]
+        }
+      );
+      console.log('Latency chart rendered successfully');
+    } catch (error) {
+      console.error('Error rendering latency chart:', error);
+    }
   }
 
   let lastFrameTime = performance.now();
