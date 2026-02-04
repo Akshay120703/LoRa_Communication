@@ -2,6 +2,8 @@
 
 A conceptual LoRa-style long-range, low-power mesh communication simulator built with pure HTML, CSS, and JavaScript. This educational tool visualizes mesh network concepts like range, noise, packet loss, and multi-hop relaying in an interactive, browser-based environment.
 
+Deployed Project link:- https://lora-communication.onrender.com/
+
 ## 🚀 Features
 
 ### **Mesh Architecture Visualization**
